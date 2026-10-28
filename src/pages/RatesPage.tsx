@@ -222,3 +222,4 @@ export const RatesPage: React.FC<RatesPageProps> = ({ onNavigate, onSelectDurati
     </div>
   );
 };
+

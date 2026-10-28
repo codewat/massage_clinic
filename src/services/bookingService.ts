@@ -86,3 +86,4 @@ export function generateDailySlots(
 
   return slots;
 }
+

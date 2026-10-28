@@ -109,3 +109,4 @@ export const InstallPwaModal: React.FC<{ isOpen: boolean; onClose: () => void }>
     </div>
   );
 };
+

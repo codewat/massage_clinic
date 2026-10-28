@@ -200,3 +200,4 @@ export const ClientDashboardPage: React.FC<ClientDashboardPageProps> = ({ onNavi
     </div>
   );
 };
+

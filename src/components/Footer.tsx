@@ -104,3 +104,4 @@ export const Footer: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
     </footer>
   );
 };
+

@@ -154,3 +154,4 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
     </div>
   );
 };
+

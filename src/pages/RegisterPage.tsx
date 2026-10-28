@@ -250,3 +250,4 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigate }) => {
     </div>
   );
 };
+

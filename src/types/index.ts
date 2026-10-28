@@ -43,3 +43,4 @@ export interface ServiceRate {
   description: string;
   restBufferMinutes: number;
 }
+

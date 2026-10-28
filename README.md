@@ -131,3 +131,4 @@ Sunda lang ang mga on-screen prompts (gamita ang default settings).
   - Name: Admin Maria Santos
 
 *Naay Quick Switcher sa ibabaw nga banner aron makabalhin-balhin ka dayon sa Admin ug Client view sa usa lang ka click!*
+

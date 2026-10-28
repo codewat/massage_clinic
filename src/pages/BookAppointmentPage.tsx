@@ -482,3 +482,4 @@ export const BookAppointmentPage: React.FC<BookAppointmentPageProps> = ({
     </div>
   );
 };
+

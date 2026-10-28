@@ -236,3 +236,4 @@ export const ViewAppointmentsPage: React.FC<ViewAppointmentsPageProps> = ({ onNa
     </div>
   );
 };
+

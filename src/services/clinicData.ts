@@ -387,3 +387,4 @@ export const ClinicStore = {
     this.setCurrentUser(DEFAULT_USERS[1]); // default to client Jessica
   }
 };
+
