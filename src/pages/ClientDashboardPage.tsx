@@ -5,14 +5,12 @@ import {
   CalendarPlus, 
   CalendarCheck, 
   UserCircle, 
-  Sparkles, 
   Clock, 
-  MapPin, 
   ArrowRight, 
   CheckCircle2, 
-  AlertCircle 
+  Sparkles 
 } from 'lucide-react';
-import { formatDisplayTime } from '../services/clinicData';
+import { formatDisplayTime, CLINIC_NAME } from '../services/clinicData';
 
 interface ClientDashboardPageProps {
   onNavigate: (page: string) => void;
@@ -27,75 +25,73 @@ export const ClientDashboardPage: React.FC<ClientDashboardPageProps> = ({ onNavi
   const nextAppointment = upcomingAppointments[0];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 animate-fade-in">
-      {/* Welcome Hero Banner */}
-      <div className="bg-gradient-to-r from-sage-800 via-sage-700 to-stone-850 text-white rounded-3xl p-6 sm:p-10 shadow-lg relative overflow-hidden">
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-white/5 transform skew-x-12 pointer-events-none" />
-
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 animate-fade-in text-white">
+      {/* Welcome Banner */}
+      <div className="glass-card rounded-3xl p-6 sm:p-10 border border-white/15 relative overflow-hidden shadow-2xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-4">
             {currentUser?.profilePic ? (
               <img
                 src={currentUser.profilePic}
                 alt="Profile"
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover ring-4 ring-white/20 shadow-md shrink-0"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover ring-4 ring-[#F1BB09] shadow-lg shrink-0"
               />
             ) : (
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-2xl shrink-0">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#0D9488] text-white flex items-center justify-center font-bold text-2xl shrink-0 ring-4 ring-[#F1BB09]">
                 {currentUser?.firstName?.[0] || 'U'}
               </div>
             )}
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs uppercase tracking-widest font-mono text-spa-200">
-                  Welcome to Serenity
+                <span className="text-xs uppercase tracking-widest font-mono text-[#F1BB09]">
+                  Welcome to {CLINIC_NAME}
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1">
-                Maayong Adlaw, {currentUser?.preferredName || currentUser?.firstName}!
+                Hello, {currentUser?.preferredName || currentUser?.firstName}!
               </h1>
-              <p className="text-xs sm:text-sm text-stone-200 mt-1 max-w-md">
-                Unsa ang imong plano karon? Pwede ka mag-book ug bag-ong sesyon o motan-aw sa imong appointments.
+              <p className="text-xs sm:text-sm text-[#FBF4C4]/80 mt-1 max-w-md">
+                Schedule a new therapy session, review your previous bookings, or update your personal account details.
               </p>
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center shrink-0 w-full sm:w-auto">
-            <p className="text-xs text-stone-300">Total Bookings</p>
-            <p className="text-2xl font-bold font-serif text-spa-200 mt-0.5">
+          <div className="bg-[#161E1A]/80 border border-white/10 rounded-2xl p-4 text-center shrink-0 w-full sm:w-auto">
+            <p className="text-xs text-[#FBF4C4]/60">Total Bookings</p>
+            <p className="text-2xl font-bold font-serif text-[#F1BB09] mt-0.5">
               {userAppointments.length}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Primary 3 Action Buttons / Cards (As specifically requested by user) */}
+      {/* 3 Primary Action Buttons specifically required */}
       <div>
-        <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 font-mono mb-4">
-          Unsa ang gusto nimo buhaton? (Quick Actions)
+        <h2 className="text-xs font-bold uppercase tracking-wider text-[#F1BB09] font-mono mb-4">
+          Quick Actions
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* 1. Book Appointment */}
           <div
             onClick={() => onNavigate('book-appointment')}
-            className="group bg-white rounded-3xl p-6 sm:p-8 border-2 border-sage-600/30 hover:border-sage-600 shadow-md hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-1 flex flex-col justify-between"
+            className="group glass-card rounded-3xl p-6 sm:p-8 border border-white/10 hover:border-[#F1BB09] transition-all cursor-pointer transform hover:-translate-y-1 flex flex-col justify-between"
           >
             <div>
-              <div className="w-14 h-14 rounded-2xl bg-sage-700 text-white flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-[#F1BB09] text-[#1A1A1A] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform shadow-lg">
                 <CalendarPlus className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-stone-900 mb-2">
+              <h3 className="text-xl font-serif font-bold text-white mb-2">
                 Book Appointment
               </h3>
-              <p className="text-stone-600 text-xs sm:text-sm leading-relaxed">
-                Pili ug oras (9am - 6pm), petsa, gidugayon (30m - 90m), ug i-specify ang target body parts nga gusto nimo ipa-focus.
+              <p className="text-[#FBF4C4]/75 text-xs sm:text-sm leading-relaxed">
+                Choose duration (30m - 90m), pick date and time slot (9:00 AM - 6:00 PM), and specify target muscle focus areas.
               </p>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-sage-800 font-semibold text-xs tracking-wide">
-              <span>Mag-book Karon</span>
+            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[#F1BB09] font-bold text-xs tracking-wide">
+              <span>Schedule Session</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
@@ -103,22 +99,22 @@ export const ClientDashboardPage: React.FC<ClientDashboardPageProps> = ({ onNavi
           {/* 2. View Appointments */}
           <div
             onClick={() => onNavigate('view-appointments')}
-            className="group bg-white rounded-3xl p-6 sm:p-8 border border-spa-200 hover:border-sage-500 shadow-sm hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-1 flex flex-col justify-between"
+            className="group glass-card rounded-3xl p-6 sm:p-8 border border-white/10 hover:border-[#0D9488] transition-all cursor-pointer transform hover:-translate-y-1 flex flex-col justify-between"
           >
             <div>
-              <div className="w-14 h-14 rounded-2xl bg-spa-200 text-spa-900 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-[#0D9488] text-white flex items-center justify-center mb-5 group-hover:scale-105 transition-transform shadow-lg">
                 <CalendarCheck className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-stone-900 mb-2">
+              <h3 className="text-xl font-serif font-bold text-white mb-2">
                 View Appointments
               </h3>
-              <p className="text-stone-600 text-xs sm:text-sm leading-relaxed">
-                Tan-awa ang tanan nimo nga upcoming ug previous appointments, apil ang status (Confirmed, Done, o Cancelled).
+              <p className="text-[#FBF4C4]/75 text-xs sm:text-sm leading-relaxed">
+                Browse all your upcoming and past massage treatments, including status badges (Confirmed, Done, or Cancelled).
               </p>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-stone-800 font-semibold text-xs tracking-wide">
-              <span>Tan-awa ang Listahan ({userAppointments.length})</span>
+            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[#0D9488] font-bold text-xs tracking-wide">
+              <span>View History ({userAppointments.length})</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
@@ -126,70 +122,70 @@ export const ClientDashboardPage: React.FC<ClientDashboardPageProps> = ({ onNavi
           {/* 3. View Profile */}
           <div
             onClick={() => onNavigate('view-profile')}
-            className="group bg-white rounded-3xl p-6 sm:p-8 border border-spa-200 hover:border-sage-500 shadow-sm hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-1 flex flex-col justify-between"
+            className="group glass-card rounded-3xl p-6 sm:p-8 border border-white/10 hover:border-[#716B56] transition-all cursor-pointer transform hover:-translate-y-1 flex flex-col justify-between"
           >
             <div>
-              <div className="w-14 h-14 rounded-2xl bg-stone-100 text-stone-800 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-[#716B56] text-[#FBF4C4] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform shadow-lg">
                 <UserCircle className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-stone-900 mb-2">
-                View &amp; Edit Profile
+              <h3 className="text-xl font-serif font-bold text-white mb-2">
+                View Profile
               </h3>
-              <p className="text-stone-600 text-xs sm:text-sm leading-relaxed">
-                I-update ang imong First Name, Preferred Name, Last Name, Phone Number, Email, Home Address, o Profile Picture.
+              <p className="text-[#FBF4C4]/75 text-xs sm:text-sm leading-relaxed">
+                Update your name, preferred name, email, phone number (000-000-0000), home address, and profile picture.
               </p>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-stone-800 font-semibold text-xs tracking-wide">
-              <span>I-manage ang Profile</span>
+            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[#FBF4C4] font-bold text-xs tracking-wide">
+              <span>Manage Account</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Next Upcoming Appointment Spotlight (if any) */}
+      {/* Next Upcoming Appointment */}
       {nextAppointment && (
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-sage-300 shadow-sm space-y-4">
-          <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+        <div className="glass-card rounded-3xl p-6 sm:p-8 border border-[#0D9488]/40 shadow-xl space-y-4">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <h3 className="font-serif font-bold text-stone-900 text-lg">
-                Imong Sunod nga Appointment (Upcoming)
+              <span className="w-2.5 h-2.5 rounded-full bg-[#0D9488] animate-pulse"></span>
+              <h3 className="font-serif font-bold text-white text-lg">
+                Upcoming Appointment
               </h3>
             </div>
             <button
               onClick={() => onNavigate('view-appointments')}
-              className="text-xs font-semibold text-sage-700 hover:text-sage-900"
+              className="text-xs font-bold text-[#F1BB09] hover:underline"
             >
-              Tan-awon Tanan →
+              View All Appointments →
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm bg-spa-50 p-4 rounded-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm bg-[#161E1A]/80 p-4 rounded-2xl border border-white/10">
             <div>
-              <span className="text-xs text-stone-500 block">Petsa &amp; Oras:</span>
-              <p className="font-semibold text-stone-900 mt-0.5">
+              <span className="text-xs text-[#FBF4C4]/60 block">Date &amp; Time:</span>
+              <p className="font-semibold text-white mt-0.5">
                 {nextAppointment.date} @ {formatDisplayTime(nextAppointment.startTime)}
               </p>
             </div>
 
             <div>
-              <span className="text-xs text-stone-500 block">Gidugayon:</span>
-              <p className="font-semibold text-stone-900 mt-0.5">
+              <span className="text-xs text-[#FBF4C4]/60 block">Duration &amp; Fee:</span>
+              <p className="font-semibold text-white mt-0.5">
                 {nextAppointment.duration} Mins (${nextAppointment.price})
               </p>
             </div>
 
             <div>
-              <span className="text-xs text-stone-500 block">Body Focus:</span>
-              <p className="font-semibold text-stone-900 mt-0.5">
-                {nextAppointment.bodyPartFocus.join(', ') || 'General Relief'}
+              <span className="text-xs text-[#FBF4C4]/60 block">Body Focus:</span>
+              <p className="font-semibold text-white mt-0.5">
+                {nextAppointment.bodyPartFocus.join(', ') || 'General Wellness'}
               </p>
             </div>
 
             <div className="flex items-center justify-end">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#0D9488]/20 text-[#0D9488] border border-[#0D9488]/40">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 Confirmed
               </span>
@@ -200,4 +196,3 @@ export const ClientDashboardPage: React.FC<ClientDashboardPageProps> = ({ onNavi
     </div>
   );
 };
-

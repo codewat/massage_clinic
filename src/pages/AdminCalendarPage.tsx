@@ -6,7 +6,6 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Plus, 
-  Clock, 
   ArrowLeft, 
   Coffee, 
   User 
@@ -14,7 +13,8 @@ import {
 import { 
   formatDisplayTime, 
   formatDateKey, 
-  getTodayDateString 
+  getTodayDateString,
+  CLINIC_NAME
 } from '../services/clinicData';
 import { AdminAddEditBookingModal } from '../components/AdminAddEditBookingModal';
 
@@ -30,7 +30,6 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
   const [isAddEditModalOpen, setIsAddEditModalOpen] = useState(false);
   const [editingBooking, setEditingBooking] = useState<Appointment | null>(null);
 
-  // Month navigation
   const prevPeriod = () => {
     const d = new Date(currentDate);
     if (viewMode === 'weekly') {
@@ -55,7 +54,6 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
     setCurrentDate(new Date());
   };
 
-  // Compute 7 days for the current week (starting Sunday or Monday)
   const getWeekDates = (baseDate: Date) => {
     const start = new Date(baseDate);
     const day = start.getDay();
@@ -71,7 +69,6 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
     return week;
   };
 
-  // Compute days for monthly grid
   const getMonthDays = (baseDate: Date) => {
     const year = baseDate.getFullYear();
     const month = baseDate.getMonth();
@@ -79,7 +76,6 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
     const lastDay = new Date(year, month + 1, 0);
 
     const days: (Date | null)[] = [];
-    // Padding before 1st day (Monday start)
     let startPad = firstDay.getDay() - 1;
     if (startPad < 0) startPad = 6;
     for (let i = 0; i < startPad; i++) {
@@ -111,50 +107,49 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6 animate-fade-in">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6 animate-fade-in text-white">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           onClick={() => onNavigate('admin-dashboard')}
-          className="flex items-center gap-1.5 text-stone-500 hover:text-stone-800 text-sm font-medium transition-colors"
+          className="flex items-center gap-1.5 text-stone-300 hover:text-white text-sm font-medium transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 text-[#F1BB09]" />
           Back to Admin Dashboard
         </button>
 
         <button
           onClick={handleAddBooking}
-          className="flex items-center gap-2 px-4 py-2.5 bg-sage-700 hover:bg-sage-800 text-white rounded-xl text-xs font-semibold shadow-md transition-all active:scale-95 self-start sm:self-auto"
+          className="flex items-center gap-2 px-4 py-2.5 btn-primary-gold rounded-xl text-xs font-bold shadow-md transition-all active:scale-95 self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           Add New Booking
         </button>
       </div>
 
-      {/* Calendar Controls Bar */}
-      <div className="bg-white rounded-3xl p-6 border border-spa-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+      {/* Calendar Controls */}
+      <div className="glass-card rounded-3xl p-6 border border-white/15 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-sage-100 text-sage-800 flex items-center justify-center font-bold">
-            <CalendarIcon className="w-5 h-5 text-sage-700" />
+          <div className="w-10 h-10 rounded-2xl bg-[#0D9488]/30 border border-[#0D9488] text-[#F1BB09] flex items-center justify-center font-bold">
+            <CalendarIcon className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-serif font-bold text-stone-900">
+            <h1 className="text-2xl font-serif font-bold text-white">
               {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
             </h1>
-            <p className="text-xs text-stone-500">
-              Basta admin makita nimo ang ngalan sa tanan kliyente nga naka-book.
+            <p className="text-xs text-[#FBF4C4]/80">
+              Admin schedule overview — all booked client names and buffers visible.
             </p>
           </div>
         </div>
 
         {/* View Switcher & Period Nav */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Weekly / Monthly Toggle */}
-          <div className="bg-stone-100 p-1 rounded-xl flex items-center text-xs font-semibold">
+          <div className="bg-[#161E1A] p-1 rounded-xl flex items-center text-xs font-semibold border border-white/10">
             <button
               onClick={() => setViewMode('weekly')}
               className={`px-3 py-1.5 rounded-lg transition-colors ${
-                viewMode === 'weekly' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500'
+                viewMode === 'weekly' ? 'bg-[#F1BB09] text-[#1A1A1A] font-bold shadow-sm' : 'text-stone-300'
               }`}
             >
               Weekly Schedule
@@ -162,42 +157,42 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
             <button
               onClick={() => setViewMode('monthly')}
               className={`px-3 py-1.5 rounded-lg transition-colors ${
-                viewMode === 'monthly' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500'
+                viewMode === 'monthly' ? 'bg-[#F1BB09] text-[#1A1A1A] font-bold shadow-sm' : 'text-stone-300'
               }`}
             >
               Monthly Schedule
             </button>
           </div>
 
-          <div className="h-5 w-px bg-stone-200 mx-1 hidden sm:block" />
+          <div className="h-5 w-px bg-white/10 mx-1 hidden sm:block" />
 
-          {/* Navigation Arrows */}
+          {/* Nav Arrows */}
           <div className="flex items-center gap-1">
             <button
               onClick={prevPeriod}
-              className="p-2 rounded-xl border border-stone-200 hover:bg-stone-100 transition-colors"
+              className="p-2 rounded-xl bg-[#161E1A] border border-white/10 hover:bg-[#1B2724] transition-colors"
             >
-              <ChevronLeft className="w-4 h-4 text-stone-600" />
+              <ChevronLeft className="w-4 h-4 text-[#F1BB09]" />
             </button>
             <button
               onClick={goToToday}
-              className="px-3 py-1.5 rounded-xl border border-stone-200 text-xs font-medium hover:bg-stone-100 transition-colors"
+              className="px-3 py-1.5 rounded-xl bg-[#161E1A] border border-white/10 text-xs font-medium hover:bg-[#1B2724] text-[#FBF4C4] transition-colors"
             >
               Today
             </button>
             <button
               onClick={nextPeriod}
-              className="p-2 rounded-xl border border-stone-200 hover:bg-stone-100 transition-colors"
+              className="p-2 rounded-xl bg-[#161E1A] border border-white/10 hover:bg-[#1B2724] transition-colors"
             >
-              <ChevronRight className="w-4 h-4 text-stone-600" />
+              <ChevronRight className="w-4 h-4 text-[#F1BB09]" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* WEEKLY SCHEDULE VIEW */}
+      {/* WEEKLY VIEW */}
       {viewMode === 'weekly' && (
-        <div className="bg-white rounded-3xl p-6 border border-spa-200 shadow-sm overflow-x-auto">
+        <div className="glass-card rounded-3xl p-6 border border-white/15 shadow-xl overflow-x-auto">
           <div className="min-w-[760px] grid grid-cols-7 gap-3">
             {weekDays.map((d) => {
               const dateKey = formatDateKey(d);
@@ -211,26 +206,26 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
                   key={dateKey}
                   className={`rounded-2xl p-3 border min-h-[460px] flex flex-col ${
                     isToday
-                      ? 'border-sage-500 bg-sage-50/40 ring-2 ring-sage-400/30'
-                      : 'border-stone-200 bg-spa-50/30'
+                      ? 'border-[#F1BB09] bg-[#1B2724]/90 ring-2 ring-[#F1BB09]/40'
+                      : 'border-white/10 bg-[#161E1A]/80'
                   }`}
                 >
-                  <div className="text-center pb-2 border-b border-stone-200 mb-3">
-                    <p className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+                  <div className="text-center pb-2 border-b border-white/10 mb-3">
+                    <p className="text-[11px] font-semibold text-[#FBF4C4]/60 uppercase tracking-wider">
                       {d.toLocaleDateString('en-US', { weekday: 'short' })}
                     </p>
-                    <p className={`text-lg font-serif font-bold ${isToday ? 'text-sage-800' : 'text-stone-800'}`}>
+                    <p className={`text-lg font-serif font-bold ${isToday ? 'text-[#F1BB09]' : 'text-white'}`}>
                       {d.getDate()}
                     </p>
-                    <span className="text-[10px] text-stone-500 font-medium">
+                    <span className="text-[10px] text-[#0D9488] font-bold">
                       {dayAppointments.length} Booked
                     </span>
                   </div>
 
-                  {/* Appointments list for this day */}
-                  <div className="space-y-2.5 flex-1">
+                  {/* Appointments list */}
+                  <div className="space-y-2 flex-1">
                     {dayAppointments.length === 0 ? (
-                      <p className="text-[11px] text-stone-400 text-center pt-8 italic">
+                      <p className="text-[11px] text-stone-500 text-center pt-8 italic">
                         Available
                       </p>
                     ) : (
@@ -238,31 +233,29 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
                         <div
                           key={apt.id}
                           onClick={() => handleEditBooking(apt)}
-                          className="p-2.5 rounded-xl bg-white border border-stone-200 hover:border-sage-400 hover:shadow-md cursor-pointer transition-all space-y-1 group"
+                          className="p-2.5 rounded-xl bg-[#1B2724] border border-white/15 hover:border-[#F1BB09] hover:shadow-lg cursor-pointer transition-all space-y-1 group"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-[11px] text-stone-900 group-hover:text-sage-800">
+                            <span className="font-bold text-[11px] text-[#F1BB09]">
                               {formatDisplayTime(apt.startTime)}
                             </span>
-                            <span className="text-[10px] text-stone-500">
+                            <span className="text-[10px] text-stone-400">
                               {apt.duration}m
                             </span>
                           </div>
 
-                          {/* Client's name displayed prominently per requirement */}
-                          <div className="text-xs font-semibold text-stone-800 flex items-center gap-1 truncate">
-                            <User className="w-3 h-3 text-sage-700 shrink-0" />
+                          <div className="text-xs font-semibold text-white flex items-center gap-1 truncate">
+                            <User className="w-3 h-3 text-[#0D9488] shrink-0" />
                             <span className="truncate">{apt.clientPreferredName || apt.clientName}</span>
                           </div>
 
-                          <div className="text-[10px] text-stone-500 truncate">
+                          <div className="text-[10px] text-[#FBF4C4]/70 truncate">
                             {apt.bodyPartFocus?.join(', ')}
                           </div>
 
-                          {/* Rest Buffer info for Admin */}
-                          <div className="text-[9px] text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded flex items-center gap-1 font-mono">
-                            <Coffee className="w-2.5 h-2.5 text-amber-700" />
-                            <span>+{apt.restBufferMinutes}m rest</span>
+                          <div className="text-[9px] text-[#FBF4C4] bg-[#716B56]/50 px-1.5 py-0.5 rounded flex items-center gap-1 font-mono">
+                            <Coffee className="w-2.5 h-2.5 text-[#F1BB09]" />
+                            <span>+{apt.restBufferMinutes}m buffer</span>
                           </div>
                         </div>
                       ))
@@ -275,12 +268,11 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
         </div>
       )}
 
-      {/* MONTHLY SCHEDULE VIEW */}
+      {/* MONTHLY VIEW */}
       {viewMode === 'monthly' && (
-        <div className="bg-white rounded-3xl p-6 border border-spa-200 shadow-sm overflow-x-auto">
+        <div className="glass-card rounded-3xl p-6 border border-white/15 shadow-xl overflow-x-auto">
           <div className="min-w-[760px]">
-            {/* Header row */}
-            <div className="grid grid-cols-7 gap-2 text-center text-xs font-bold text-stone-500 uppercase tracking-wider pb-3 border-b border-stone-200 font-mono">
+            <div className="grid grid-cols-7 gap-2 text-center text-xs font-bold text-[#F1BB09] uppercase tracking-wider pb-3 border-b border-white/10 font-mono">
               <div>Mon</div>
               <div>Tue</div>
               <div>Wed</div>
@@ -290,11 +282,10 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
               <div>Sun</div>
             </div>
 
-            {/* Grid days */}
             <div className="grid grid-cols-7 gap-2 pt-2">
               {monthDays.map((d, index) => {
                 if (!d) {
-                  return <div key={`empty-${index}`} className="h-32 bg-stone-50/50 rounded-2xl" />;
+                  return <div key={`empty-${index}`} className="h-32 bg-[#161E1A]/40 rounded-2xl border border-transparent" />;
                 }
 
                 const dateKey = formatDateKey(d);
@@ -308,31 +299,30 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
                     key={dateKey}
                     className={`h-32 rounded-2xl p-2 border flex flex-col justify-between overflow-hidden transition-all ${
                       isToday
-                        ? 'border-sage-500 bg-sage-50/30'
-                        : 'border-stone-200 hover:border-stone-300'
+                        ? 'border-[#F1BB09] bg-[#1B2724]/90'
+                        : 'border-white/10 bg-[#161E1A]/80 hover:border-white/20'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className={`text-xs font-bold ${isToday ? 'text-sage-800' : 'text-stone-700'}`}>
+                      <span className={`text-xs font-bold ${isToday ? 'text-[#F1BB09]' : 'text-white'}`}>
                         {d.getDate()}
                       </span>
                       {dayAppointments.length > 0 && (
-                        <span className="text-[10px] font-semibold text-sage-800 bg-sage-100 px-1.5 rounded-full">
+                        <span className="text-[10px] font-bold text-[#1A1A1A] bg-[#F1BB09] px-1.5 rounded-full">
                           {dayAppointments.length}
                         </span>
                       )}
                     </div>
 
-                    {/* Bookings pills with Client's name */}
                     <div className="space-y-1 overflow-y-auto max-h-20 text-[10px]">
                       {dayAppointments.map(apt => (
                         <div
                           key={apt.id}
                           onClick={() => handleEditBooking(apt)}
-                          className="bg-spa-100 hover:bg-spa-200 text-stone-800 px-1.5 py-0.5 rounded truncate font-medium cursor-pointer"
+                          className="bg-[#1B2724] border border-white/10 hover:border-[#F1BB09] text-[#FBF4C4] px-1.5 py-0.5 rounded truncate font-medium cursor-pointer"
                           title={`${apt.clientName} @ ${formatDisplayTime(apt.startTime)}`}
                         >
-                          <strong>{formatDisplayTime(apt.startTime)}:</strong> {apt.clientPreferredName || apt.clientName}
+                          <strong className="text-[#F1BB09]">{formatDisplayTime(apt.startTime)}:</strong> {apt.clientPreferredName || apt.clientName}
                         </div>
                       ))}
                     </div>
@@ -344,7 +334,6 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
         </div>
       )}
 
-      {/* Admin Add/Edit Modal */}
       <AdminAddEditBookingModal
         isOpen={isAddEditModalOpen}
         onClose={() => setIsAddEditModalOpen(false)}
@@ -353,4 +342,3 @@ export const AdminCalendarPage: React.FC<AdminCalendarPageProps> = ({ onNavigate
     </div>
   );
 };
-

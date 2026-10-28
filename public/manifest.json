@@ -1,27 +1,16 @@
 {
-  "short_name": "Serenity Spa",
-  "name": "Serenity Massage Clinic & Wellness",
+  "short_name": "Charlene RMT",
+  "name": "Charlene Agdan RMT - Registered Massage Therapist",
   "icons": [
     {
       "src": "/icon.svg",
       "type": "image/svg+xml",
       "sizes": "any"
-    },
-    {
-      "src": "/icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
     }
   ],
   "start_url": "/",
-  "background_color": "#fbf9f6",
-  "theme_color": "#628762",
+  "background_color": "#161E1A",
+  "theme_color": "#F1BB09",
   "display": "standalone",
   "orientation": "portrait"
 }
-

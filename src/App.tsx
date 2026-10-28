@@ -19,16 +19,18 @@ import { AdminCalendarPage } from './pages/AdminCalendarPage';
 import { AdminClientProfilesPage } from './pages/AdminClientProfilesPage';
 
 const MainApp: React.FC = () => {
-  const { currentUser, isAdmin } = useAuth();
+  const { currentUser, isAdmin, isAuthenticated } = useAuth();
   const [currentPage, setCurrentPage] = useState<string>('home');
   const [preselectedDuration, setPreselectedDuration] = useState<number>(60);
 
-  // If user role switches from admin to client or vice versa, redirect logically
+  // If user is authenticated and is on a public page like home/rates/contact, or switches roles
   useEffect(() => {
-    if (isAdmin && (currentPage === 'client-dashboard' || currentPage === 'view-appointments')) {
-      setCurrentPage('admin-dashboard');
+    if (isAuthenticated) {
+      if (isAdmin && (currentPage === 'client-dashboard' || currentPage === 'view-appointments')) {
+        setCurrentPage('admin-dashboard');
+      }
     }
-  }, [isAdmin]);
+  }, [isAdmin, isAuthenticated]);
 
   const handleSelectDuration = (dur: number) => {
     setPreselectedDuration(dur);
@@ -46,7 +48,7 @@ const MainApp: React.FC = () => {
           />
         );
       case 'contact':
-        return <ContactPage />;
+        return <ContactPage onNavigate={setCurrentPage} />;
       case 'login':
         return <LoginPage onNavigate={setCurrentPage} />;
       case 'register':
@@ -76,11 +78,24 @@ const MainApp: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-spa-50 text-stone-800">
+    <div className="relative min-h-screen flex flex-col text-white selection:bg-[#F1BB09] selection:text-[#1A1A1A]">
+      {/* Steady Fixed Background Image across whole app */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <img
+          src="/bg.jpeg"
+          alt="Clinic Background"
+          className="w-full h-full object-cover object-left md:object-center brightness-105 contrast-100"
+        />
+        {/* Clear translucent dark overlay (#59000000) for great readability while keeping image visible */}
+        <div className="absolute inset-0 bg-[#161E1A]/45 backdrop-blur-[0.5px]" />
+      </div>
+
       <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      
       <main className="flex-grow">
         {renderPage()}
       </main>
+
       <Footer onNavigate={setCurrentPage} />
     </div>
   );
@@ -97,4 +112,3 @@ export const App: React.FC = () => {
 };
 
 export default App;
-

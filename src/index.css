@@ -1,37 +1,94 @@
 @import "tailwindcss";
 
 @theme {
-  --color-spa-50: #fbf9f6;
-  --color-spa-100: #f5f0e9;
-  --color-spa-200: #ebdfd0;
-  --color-spa-300: #dfcaa8;
-  --color-spa-400: #ceaf80;
-  --color-spa-500: #b8925d;
-  --color-spa-600: #9e7545;
-  --color-spa-700: #7e5a37;
-  --color-spa-800: #644830;
-  --color-spa-900: #523c2a;
+  /* Brand Primary & Accents */
+  --color-gold-primary: #F1BB09;
+  --color-gold-hover: #DEAA06;
+  --color-cream-light: #FBF4C4;
+  --color-teal-primary: #0D9488;
+  --color-olive-secondary: #716B56;
+  --color-olive-hover: #5D5846;
 
-  --color-sage-50: #f4f7f4;
-  --color-sage-100: #e5ece5;
-  --color-sage-200: #ceddce;
-  --color-sage-300: #abc4ab;
-  --color-sage-400: #83a583;
-  --color-sage-500: #628762;
-  --color-sage-600: #4c6c4c;
-  --color-sage-700: #3e563e;
-  --color-sage-800: #344634;
-  --color-sage-900: #2c3a2c;
+  /* Backgrounds & Containers */
+  --color-slate-dark: #1B2724;
+  --color-slate-deep: #161E1A;
+  --color-cream-warm: #FDF6E2;
+
+  /* Alert / Restricted */
+  --color-restricted-red: #FF5252;
 
   --font-serif: "Playfair Display", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", Inter, system-ui, sans-serif;
 }
 
 body {
-  background-color: var(--color-spa-50);
-  color: #292524;
+  color: #FFFFFF;
   font-family: var(--font-sans);
   -webkit-tap-highlight-color: transparent;
+  min-height: 100vh;
+}
+
+/* Glassmorphic Dark Card */
+.glass-card {
+  background-color: rgba(27, 39, 36, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.glass-card-subtle {
+  background-color: rgba(22, 30, 26, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Translucent Input Field */
+.translucent-input {
+  background-color: rgba(31, 38, 34, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+}
+
+.translucent-input:focus {
+  border-color: #F1BB09;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(241, 187, 9, 0.25);
+}
+
+.translucent-input::placeholder {
+  color: rgba(251, 244, 196, 0.45);
+}
+
+/* Primary Gold Button */
+.btn-primary-gold {
+  background-color: #F1BB09;
+  color: #1A1A1A;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-primary-gold:hover {
+  background-color: #DEAA06;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(241, 187, 9, 0.35);
+}
+
+.btn-primary-gold:active {
+  transform: translateY(0);
+}
+
+/* Secondary Olive Button */
+.btn-secondary-olive {
+  background-color: #716B56;
+  color: #FBF4C4;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary-olive:hover {
+  background-color: #5D5846;
 }
 
 @keyframes fadeIn {
@@ -49,18 +106,18 @@ body {
   animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Custom scrollbar for clean spa look */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f5f0e9;
+  background: #161E1A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #ceaf80;
+  background: #716B56;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #b8925d;
+  background: #F1BB09;
 }

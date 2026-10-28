@@ -1,39 +1,42 @@
 import { User, Appointment, ServiceRate } from '../types';
 
+export const CLINIC_NAME = 'Charlene Agdan RMT';
+export const CLINIC_TITLE = 'Registered Massage Therapist';
+
 export const SERVICE_RATES: ServiceRate[] = [
   {
     duration: 30,
     price: 65,
-    title: '30-Minute Quick Relief',
-    description: 'Targeted session focused on high-tension areas for swift rejuvenation.',
+    title: '30-Minute Targeted Relief',
+    description: 'Focused session targeting high-tension areas for swift revitalization.',
     restBufferMinutes: 10,
   },
   {
     duration: 45,
     price: 90,
     title: '45-Minute Focused Therapy',
-    description: 'Comprehensive focus on selected muscle groups and tension points.',
+    description: 'Comprehensive work on selected muscle groups and tension points.',
     restBufferMinutes: 10,
   },
   {
     duration: 60,
     price: 115,
     title: '60-Minute Classic Full Body / Focused',
-    description: 'The standard restorative full-body massage designed to release stress.',
+    description: 'The standard restorative therapeutic massage designed to release chronic stress.',
     restBufferMinutes: 15,
   },
   {
     duration: 75,
     price: 140,
     title: '75-Minute Deep Restorative',
-    description: 'Extended full-body therapy with deep tissue and relaxation techniques.',
+    description: 'Extended therapeutic bodywork integrating myofascial and deep tissue techniques.',
     restBufferMinutes: 15,
   },
   {
     duration: 90,
     price: 160,
     title: '90-Minute Ultimate Wellness',
-    description: 'Our premier luxury full-body experience for complete mind-body harmony.',
+    description: 'Premier comprehensive treatment for complete full-body recovery and rejuvenation.',
     restBufferMinutes: 15,
   },
 ];
@@ -50,20 +53,32 @@ export const BODY_PARTS_LIST = [
   'Head & Scalp',
 ];
 
-// Helper to format minutes to HH:mm (24-hour)
+// Phone number formatting helper: 000-000-0000
+export function formatPhoneNumber(val: string): string {
+  const digits = val.replace(/\D/g, '').slice(0, 10);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+}
+
+export function isValidPhoneNumber(val: string): boolean {
+  return /^\d{3}-\d{3}-\d{4}$/.test(val);
+}
+
+// Convert minutes to HH:mm (24-hour)
 export function minutesToTimeString(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
   return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
 }
 
-// Helper to convert "HH:mm" to minutes from midnight
+// Convert "HH:mm" to minutes from midnight
 export function timeStringToMinutes(timeStr: string): number {
   const [h, m] = timeStr.split(':').map(Number);
   return h * 60 + m;
 }
 
-// Helper to convert 24h "HH:mm" to 12h display "9:00 AM"
+// Convert 24h "HH:mm" to 12h display "9:00 AM"
 export function formatDisplayTime(timeStr: string): string {
   if (!timeStr) return '';
   const [hStr, mStr] = timeStr.split(':');
@@ -92,17 +107,17 @@ export function getTodayDateString(): string {
   return formatDateKey(new Date());
 }
 
-// Initial default users
+// Initial default users with 000-000-0000 format
 const DEFAULT_USERS: User[] = [
   {
     id: 'user_admin_01',
-    firstName: 'Maria',
-    preferredName: 'Admin Maria',
-    lastName: 'Santos',
-    phone: '0917-888-2468',
-    email: 'admin@serenity.com',
+    firstName: 'Charlene',
+    preferredName: 'Charlene RMT',
+    lastName: 'Agdan',
+    phone: '415-555-0199',
+    email: 'admin@charleneagdanrmt.com',
     password: 'admin',
-    homeAddress: 'Suite 402, Serenity Wellness Tower, Cebu City',
+    homeAddress: 'Suite 402, Wellness Center Plaza, Calgary, AB',
     profilePic: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
     role: 'admin',
     createdAt: new Date(Date.now() - 30 * 86400000).toISOString(),
@@ -112,23 +127,23 @@ const DEFAULT_USERS: User[] = [
     firstName: 'Jessica',
     preferredName: 'Jess',
     lastName: 'Ramos',
-    phone: '0917-555-1234',
+    phone: '415-555-0123',
     email: 'client@gmail.com',
     password: 'client',
-    homeAddress: '45 Lotus St., Villa Aurora, Mabolo, Cebu City',
+    homeAddress: '128 Aspen Ridge Drive, Calgary, AB',
     profilePic: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80',
     role: 'client',
     createdAt: new Date(Date.now() - 15 * 86400000).toISOString(),
   },
   {
     id: 'user_client_02',
-    firstName: 'Carlos',
-    preferredName: 'Caloy',
-    lastName: 'Villanueva',
-    phone: '0922-334-9988',
-    email: 'caloy.v@yahoo.com',
+    firstName: 'David',
+    preferredName: 'Dave',
+    lastName: 'Miller',
+    phone: '415-555-0144',
+    email: 'dave.miller@yahoo.com',
     password: 'client',
-    homeAddress: '12 Acacia Drive, Banilad, Cebu City',
+    homeAddress: '42 Pinecrest Way NW, Calgary, AB',
     profilePic: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
     role: 'client',
     createdAt: new Date(Date.now() - 10 * 86400000).toISOString(),
@@ -138,10 +153,10 @@ const DEFAULT_USERS: User[] = [
     firstName: 'Andrea',
     preferredName: 'Andie',
     lastName: 'Tan',
-    phone: '0918-777-6543',
+    phone: '415-555-0188',
     email: 'andrea.tan@outlook.com',
     password: 'client',
-    homeAddress: 'Unit 8B, Solinea Tower, Cebu Business Park',
+    homeAddress: '702 Horizon View SW, Calgary, AB',
     profilePic: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
     role: 'client',
     createdAt: new Date(Date.now() - 5 * 86400000).toISOString(),
@@ -152,7 +167,6 @@ const DEFAULT_USERS: User[] = [
 function getInitialAppointments(): Appointment[] {
   const today = getTodayDateString();
   
-  // Yesterday and tomorrow dates
   const yesterdayDate = new Date();
   yesterdayDate.setDate(yesterdayDate.getDate() - 1);
   const yesterday = formatDateKey(yesterdayDate);
@@ -167,7 +181,7 @@ function getInitialAppointments(): Appointment[] {
       userId: 'user_client_01',
       clientName: 'Jessica Ramos',
       clientPreferredName: 'Jess',
-      clientPhone: '0917-555-1234',
+      clientPhone: '415-555-0123',
       clientEmail: 'client@gmail.com',
       date: today,
       startTime: '09:30',
@@ -175,7 +189,7 @@ function getInitialAppointments(): Appointment[] {
       duration: 60,
       price: 115,
       bodyPartFocus: ['Back', 'Shoulders'],
-      customNotes: 'Chronic shoulder tightness due to desk work. Moderate to deep pressure.',
+      customNotes: 'Chronic shoulder tightness due to desk posture. Moderate to deep pressure.',
       status: 'confirmed',
       restBufferMinutes: 15,
       bufferEndTime: '10:45',
@@ -184,17 +198,17 @@ function getInitialAppointments(): Appointment[] {
     {
       id: 'apt_02',
       userId: 'user_client_02',
-      clientName: 'Carlos Villanueva',
-      clientPreferredName: 'Caloy',
-      clientPhone: '0922-334-9988',
-      clientEmail: 'caloy.v@yahoo.com',
+      clientName: 'David Miller',
+      clientPreferredName: 'Dave',
+      clientPhone: '415-555-0144',
+      clientEmail: 'dave.miller@yahoo.com',
       date: today,
       startTime: '13:00',
       endTime: '13:45',
       duration: 45,
       price: 90,
       bodyPartFocus: ['Lower Back & Hips', 'Legs & Thighs'],
-      customNotes: 'Post-workout soreness.',
+      customNotes: 'Post-running muscle soreness.',
       status: 'confirmed',
       restBufferMinutes: 10,
       bufferEndTime: '13:55',
@@ -205,7 +219,7 @@ function getInitialAppointments(): Appointment[] {
       userId: 'user_client_03',
       clientName: 'Andrea Tan',
       clientPreferredName: 'Andie',
-      clientPhone: '0918-777-6543',
+      clientPhone: '415-555-0188',
       clientEmail: 'andrea.tan@outlook.com',
       date: today,
       startTime: '15:30',
@@ -213,7 +227,7 @@ function getInitialAppointments(): Appointment[] {
       duration: 90,
       price: 160,
       bodyPartFocus: ['Full Body Harmonization', 'Neck', 'Head & Scalp'],
-      customNotes: 'Stress relief and calming aromatics.',
+      customNotes: 'Stress relief and therapeutic muscle release.',
       status: 'confirmed',
       restBufferMinutes: 15,
       bufferEndTime: '17:15',
@@ -224,7 +238,7 @@ function getInitialAppointments(): Appointment[] {
       userId: 'user_client_01',
       clientName: 'Jessica Ramos',
       clientPreferredName: 'Jess',
-      clientPhone: '0917-555-1234',
+      clientPhone: '415-555-0123',
       clientEmail: 'client@gmail.com',
       date: yesterday,
       startTime: '11:00',
@@ -232,7 +246,7 @@ function getInitialAppointments(): Appointment[] {
       duration: 30,
       price: 65,
       bodyPartFocus: ['Neck', 'Shoulders'],
-      customNotes: 'Quick neck relief.',
+      customNotes: 'Targeted neck relief.',
       status: 'done',
       restBufferMinutes: 10,
       bufferEndTime: '11:40',
@@ -243,7 +257,7 @@ function getInitialAppointments(): Appointment[] {
       userId: 'user_client_01',
       clientName: 'Jessica Ramos',
       clientPreferredName: 'Jess',
-      clientPhone: '0917-555-1234',
+      clientPhone: '415-555-0123',
       clientEmail: 'client@gmail.com',
       date: tomorrow,
       startTime: '14:00',
@@ -260,9 +274,9 @@ function getInitialAppointments(): Appointment[] {
   ];
 }
 
-const STORAGE_KEY_USERS = 'serenity_spa_users_v2';
-const STORAGE_KEY_APPOINTMENTS = 'serenity_spa_appointments_v2';
-const STORAGE_KEY_CURRENT_USER = 'serenity_spa_current_user_v2';
+const STORAGE_KEY_USERS = 'charlene_agdan_rmt_users_v3';
+const STORAGE_KEY_APPOINTMENTS = 'charlene_agdan_rmt_apts_v3';
+const STORAGE_KEY_CURRENT_USER = 'charlene_agdan_rmt_cur_user_v3';
 
 export const ClinicStore = {
   getUsers(): User[] {
@@ -290,7 +304,6 @@ export const ClinicStore = {
     const users = this.getUsers().map(u => u.id === updated.id ? updated : u);
     this.saveUsers(users);
     
-    // Also update current user if it's the same person
     const cur = this.getCurrentUser();
     if (cur && cur.id === updated.id) {
       localStorage.setItem(STORAGE_KEY_CURRENT_USER, JSON.stringify(updated));
@@ -380,11 +393,9 @@ export const ClinicStore = {
     this.saveAppointments(apts);
   },
 
-  // Reset to demo data
   resetToDefaults() {
     localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(DEFAULT_USERS));
     localStorage.setItem(STORAGE_KEY_APPOINTMENTS, JSON.stringify(getInitialAppointments()));
-    this.setCurrentUser(DEFAULT_USERS[1]); // default to client Jessica
+    this.setCurrentUser(DEFAULT_USERS[1]);
   }
 };
-

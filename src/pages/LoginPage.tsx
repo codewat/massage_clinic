@@ -3,13 +3,13 @@ import { useAuth } from '../context/AuthContext';
 import { 
   LogIn, 
   Sparkles, 
-  ArrowRight, 
   ShieldCheck, 
   User, 
   Lock, 
   Mail,
   AlertCircle
 } from 'lucide-react';
+import { CLINIC_NAME } from '../services/clinicData';
 
 interface LoginPageProps {
   onNavigate: (page: string) => void;
@@ -31,7 +31,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
       return;
     }
 
-    // Check if the logged in user is admin
     if (email.toLowerCase().includes('admin')) {
       onNavigate('admin-dashboard');
     } else {
@@ -49,28 +48,28 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-16 animate-fade-in">
-      <div className="bg-white rounded-3xl p-8 border border-spa-200 shadow-xl space-y-6">
+    <div className="max-w-md mx-auto px-4 py-16 animate-fade-in text-white">
+      <div className="glass-card rounded-3xl p-8 border border-white/15 shadow-2xl space-y-6">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-2xl bg-sage-100 text-sage-800 flex items-center justify-center mx-auto mb-3 shadow-inner">
+          <div className="w-12 h-12 rounded-2xl bg-[#0D9488]/30 border border-[#0D9488] text-[#F1BB09] flex items-center justify-center mx-auto mb-3 shadow-md">
             <Sparkles className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-serif font-bold text-stone-900">Sign In to Serenity</h2>
-          <p className="text-xs text-stone-500 mt-1">
-            Access your appointments, book sessions, and customize body focus
+          <h2 className="text-2xl font-serif font-bold text-white">Sign In</h2>
+          <p className="text-xs text-[#FBF4C4]/75 mt-1">
+            Access your appointments and manage your profile at {CLINIC_NAME}
           </p>
         </div>
 
         {error && (
-          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="p-3.5 rounded-xl bg-[#FF5252]/20 border border-[#FF5252] text-white text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-[#FF5252] shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-[#FBF4C4] uppercase tracking-wider mb-1.5">
               Email Address
             </label>
             <div className="relative">
@@ -81,13 +80,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="client@gmail.com"
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent text-sm"
+                className="w-full pl-10 pr-4 py-3 rounded-xl translucent-input text-sm"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-[#FBF4C4] uppercase tracking-wider mb-1.5">
               Password
             </label>
             <div className="relative">
@@ -98,14 +97,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent text-sm"
+                className="w-full pl-10 pr-4 py-3 rounded-xl translucent-input text-sm"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full py-3.5 px-4 bg-sage-700 hover:bg-sage-800 text-white rounded-xl font-semibold text-sm shadow-md flex items-center justify-center gap-2 transition-all active:scale-95"
+            className="w-full py-3.5 px-4 btn-primary-gold rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all active:scale-95"
           >
             <LogIn className="w-4 h-4" />
             Sign In
@@ -113,45 +112,44 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
         </form>
 
         {/* Demo Fast-Login Buttons */}
-        <div className="pt-4 border-t border-stone-100 space-y-2">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-stone-400 text-center font-mono">
-            Quick 1-Click Demo Login
+        <div className="pt-4 border-t border-white/10 space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#F1BB09] text-center font-mono">
+            Fast Demo Login (1-Click)
           </p>
 
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => handleQuickLogin('client@gmail.com', 'client', false)}
-              className="p-2.5 rounded-xl border border-sage-200 bg-sage-50 hover:bg-sage-100 text-sage-900 text-xs font-medium flex flex-col items-center gap-1 transition-colors"
+              className="p-3 rounded-xl border border-white/15 bg-[#161E1A] hover:bg-[#1B2724] text-white text-xs font-medium flex flex-col items-center gap-1 transition-all"
             >
-              <User className="w-4 h-4 text-sage-700" />
-              <span>Login as Client</span>
-              <span className="text-[10px] text-stone-500 font-normal">(Jess Ramos)</span>
+              <User className="w-4 h-4 text-[#F1BB09]" />
+              <span className="font-semibold">Demo Client</span>
+              <span className="text-[10px] text-[#FBF4C4]/60">(Jessica Ramos)</span>
             </button>
 
             <button
               type="button"
-              onClick={() => handleQuickLogin('admin@serenity.com', 'admin', true)}
-              className="p-2.5 rounded-xl border border-stone-300 bg-stone-100 hover:bg-stone-200 text-stone-900 text-xs font-medium flex flex-col items-center gap-1 transition-colors"
+              onClick={() => handleQuickLogin('admin@charleneagdanrmt.com', 'admin', true)}
+              className="p-3 rounded-xl border border-[#0D9488]/40 bg-[#161E1A] hover:bg-[#1B2724] text-white text-xs font-medium flex flex-col items-center gap-1 transition-all"
             >
-              <ShieldCheck className="w-4 h-4 text-stone-700" />
-              <span>Login as Admin</span>
-              <span className="text-[10px] text-stone-500 font-normal">(Admin Maria)</span>
+              <ShieldCheck className="w-4 h-4 text-[#0D9488]" />
+              <span className="font-semibold">Demo Admin</span>
+              <span className="text-[10px] text-[#FBF4C4]/60">(Charlene Agdan)</span>
             </button>
           </div>
         </div>
 
-        <div className="text-center text-xs text-stone-500 pt-2">
-          Wala pa kay account?{' '}
+        <div className="text-center text-xs text-[#FBF4C4]/70 pt-2 border-t border-white/10">
+          Don't have an account yet?{' '}
           <button
             onClick={() => onNavigate('register')}
-            className="font-semibold text-sage-700 hover:text-sage-800 underline underline-offset-2"
+            className="font-bold text-[#F1BB09] hover:underline underline-offset-2 ml-1"
           >
-            Register dinhi
+            Register here
           </button>
         </div>
       </div>
     </div>
   );
 };
-

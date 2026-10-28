@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User } from '../types';
-import { ClinicStore } from '../services/clinicData';
+import { ClinicStore, formatPhoneNumber, isValidPhoneNumber } from '../services/clinicData';
 import { useAppointments } from '../context/AppointmentContext';
 import { 
   Users, 
@@ -10,11 +10,10 @@ import {
   Phone, 
   Mail, 
   MapPin, 
-  Calendar, 
-  Check, 
   X, 
   Camera, 
-  Save 
+  Save,
+  AlertCircle
 } from 'lucide-react';
 
 interface AdminClientProfilesPageProps {
@@ -25,8 +24,8 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
   const { appointments } = useAppointments();
   const [users, setUsers] = useState<User[]>(() => ClinicStore.getUsers().filter(u => u.role === 'client'));
   const [searchQuery, setSearchQuery] = useState('');
+  const [error, setError] = useState('');
   
-  // Selected client for editing
   const [editingClient, setEditingClient] = useState<User | null>(null);
   const [editFormData, setEditFormData] = useState({
     firstName: '',
@@ -52,15 +51,20 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
 
   const handleOpenEdit = (client: User) => {
     setEditingClient(client);
+    setError('');
     setEditFormData({
       firstName: client.firstName,
       preferredName: client.preferredName || '',
       lastName: client.lastName,
-      phone: client.phone,
+      phone: formatPhoneNumber(client.phone || ''),
       email: client.email,
       homeAddress: client.homeAddress,
       profilePic: client.profilePic || '',
     });
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditFormData(prev => ({ ...prev, phone: formatPhoneNumber(e.target.value) }));
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,6 +82,11 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
     e.preventDefault();
     if (!editingClient) return;
 
+    if (!isValidPhoneNumber(editFormData.phone)) {
+      setError('Please provide a valid phone number in 000-000-0000 format.');
+      return;
+    }
+
     const updated = ClinicStore.updateUser({
       ...editingClient,
       firstName: editFormData.firstName.trim(),
@@ -94,31 +103,31 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6 animate-fade-in">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6 animate-fade-in text-white">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           onClick={() => onNavigate('admin-dashboard')}
-          className="flex items-center gap-1.5 text-stone-500 hover:text-stone-800 text-sm font-medium transition-colors"
+          className="flex items-center gap-1.5 text-stone-300 hover:text-white text-sm font-medium transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 text-[#F1BB09]" />
           Back to Admin Dashboard
         </button>
 
-        <span className="text-xs font-mono uppercase tracking-wider text-sage-800 bg-sage-100 px-3 py-1 rounded-full border border-sage-200 self-start sm:self-auto">
-          Total Registered Clients: {users.length}
+        <span className="text-xs font-mono uppercase tracking-wider text-[#1A1A1A] bg-[#F1BB09] font-bold px-3 py-1 rounded-full self-start sm:self-auto">
+          Registered Clients: {users.length}
         </span>
       </div>
 
-      {/* Main Title & Search */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-spa-200 shadow-sm space-y-6">
+      {/* Directory Title & Search */}
+      <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/15 shadow-2xl space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-serif font-bold text-stone-900">
+            <h1 className="text-3xl font-serif font-bold text-white">
               Client Profiles Directory
             </h1>
-            <p className="text-stone-500 text-xs sm:text-sm mt-0.5">
-              Tan-awa ang mga profile sa mga kliyente ug i-edit ang ilang mga detalye kon gikinahanglan.
+            <p className="text-[#FBF4C4]/80 text-xs sm:text-sm mt-0.5">
+              Review and manage client contact records, preferred names, and therapy histories.
             </p>
           </div>
 
@@ -130,7 +139,7 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name, phone, email..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sage-500"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl translucent-input text-xs sm:text-sm"
             />
           </div>
         </div>
@@ -144,7 +153,7 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
             return (
               <div
                 key={client.id}
-                className="bg-white rounded-2xl p-5 border border-stone-200 hover:border-sage-400 hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+                className="bg-[#161E1A]/90 rounded-2xl p-5 border border-white/10 hover:border-[#F1BB09]/50 transition-all flex flex-col justify-between space-y-4 shadow-lg"
               >
                 <div>
                   <div className="flex items-start gap-4">
@@ -152,20 +161,20 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
                       <img
                         src={client.profilePic}
                         alt="Profile"
-                        className="w-14 h-14 rounded-2xl object-cover ring-2 ring-sage-200 shrink-0 shadow-sm"
+                        className="w-14 h-14 rounded-2xl object-cover ring-2 ring-[#F1BB09] shrink-0 shadow-md"
                       />
                     ) : (
-                      <div className="w-14 h-14 rounded-2xl bg-sage-100 text-sage-800 flex items-center justify-center font-bold text-lg shrink-0">
+                      <div className="w-14 h-14 rounded-2xl bg-[#0D9488] text-white flex items-center justify-center font-bold text-lg shrink-0 ring-2 ring-[#F1BB09]">
                         {client.firstName[0]}
                       </div>
                     )}
 
                     <div className="overflow-hidden">
-                      <h3 className="font-serif font-bold text-stone-900 text-base truncate">
+                      <h3 className="font-serif font-bold text-white text-base truncate">
                         {client.firstName} {client.lastName}
                       </h3>
                       {client.preferredName && (
-                        <p className="text-xs text-sage-700 font-medium">
+                        <p className="text-xs text-[#F1BB09] font-medium">
                           Preferred: "{client.preferredName}"
                         </p>
                       )}
@@ -175,34 +184,34 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-stone-100 space-y-1.5 text-xs text-stone-600">
+                  <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5 text-xs text-[#FBF4C4]/85">
                     <div className="flex items-center gap-2">
-                      <Phone className="w-3.5 h-3.5 text-stone-400 shrink-0" />
-                      <span>{client.phone || 'No phone'}</span>
+                      <Phone className="w-3.5 h-3.5 text-[#0D9488] shrink-0" />
+                      <span className="font-mono">{client.phone || 'No phone'}</span>
                     </div>
 
                     <div className="flex items-center gap-2 truncate">
-                      <Mail className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                      <Mail className="w-3.5 h-3.5 text-[#0D9488] shrink-0" />
                       <span className="truncate">{client.email}</span>
                     </div>
 
                     <div className="flex items-start gap-2 text-[11px]">
-                      <MapPin className="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
+                      <MapPin className="w-3.5 h-3.5 text-[#0D9488] shrink-0 mt-0.5" />
                       <span className="line-clamp-2">{client.homeAddress || 'No address provided'}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
-                  <span className="text-[11px] text-stone-500">
-                    <strong>{clientAppointments.length}</strong> total bookings ({completedCount} done)
+                <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-[11px] text-stone-400">
+                    <strong className="text-white">{clientAppointments.length}</strong> bookings ({completedCount} done)
                   </span>
 
                   <button
                     onClick={() => handleOpenEdit(client)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sage-50 hover:bg-sage-100 text-sage-800 font-semibold text-xs border border-sage-200 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#716B56]/60 hover:bg-[#716B56] text-[#FBF4C4] font-semibold text-xs border border-[#716B56] transition-colors"
                   >
-                    <Edit3 className="w-3.5 h-3.5" />
+                    <Edit3 className="w-3.5 h-3.5 text-[#F1BB09]" />
                     Edit Profile
                   </button>
                 </div>
@@ -212,49 +221,55 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
         </div>
       </div>
 
-      {/* Admin Edit Client Profile Modal */}
+      {/* Edit Client Profile Modal */}
       {editingClient && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto border border-spa-200">
-            <div className="flex items-center justify-between border-b border-stone-100 pb-4 mb-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in text-white">
+          <div className="glass-card rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto border border-[#F1BB09]/40">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-sage-100 text-sage-800 flex items-center justify-center font-bold">
-                  <Edit3 className="w-5 h-5 text-sage-700" />
+                <div className="w-10 h-10 rounded-2xl bg-[#0D9488]/30 border border-[#0D9488] text-[#F1BB09] flex items-center justify-center font-bold">
+                  <Edit3 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-serif font-bold text-stone-900">
+                  <h3 className="text-xl font-serif font-bold text-white">
                     Edit Client: {editingClient.firstName} {editingClient.lastName}
                   </h3>
-                  <p className="text-xs text-stone-500">
-                    Admin modification privilege
+                  <p className="text-xs text-[#F1BB09]">
+                    Admin Privilege
                   </p>
                 </div>
               </div>
 
               <button
                 onClick={() => setEditingClient(null)}
-                className="p-2 text-stone-400 hover:text-stone-700 rounded-full hover:bg-stone-100 transition-colors"
+                className="p-2 text-stone-400 hover:text-white rounded-full hover:bg-white/10 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
+            {error && (
+              <div className="p-3.5 rounded-xl bg-[#FF5252]/20 border border-[#FF5252] text-white text-xs flex items-center gap-2 mb-4">
+                <AlertCircle className="w-4 h-4 text-[#FF5252] shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
             <form onSubmit={handleSaveEdit} className="space-y-4 text-xs sm:text-sm">
-              {/* Photo preview & upload */}
               <div className="flex items-center gap-4 pb-2">
                 <div className="relative group">
                   {editFormData.profilePic ? (
                     <img
                       src={editFormData.profilePic}
                       alt="Avatar"
-                      className="w-16 h-16 rounded-full object-cover ring-2 ring-sage-300"
+                      className="w-16 h-16 rounded-full object-cover ring-2 ring-[#F1BB09]"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-full bg-sage-100 text-sage-800 flex items-center justify-center font-bold text-xl">
+                    <div className="w-16 h-16 rounded-full bg-[#0D9488] text-white flex items-center justify-center font-bold text-xl">
                       {editFormData.firstName?.[0] || 'U'}
                     </div>
                   )}
-                  <label className="absolute bottom-0 right-0 bg-sage-700 hover:bg-sage-800 text-white p-1.5 rounded-full shadow cursor-pointer">
+                  <label className="absolute bottom-0 right-0 bg-[#F1BB09] hover:bg-[#DEAA06] text-[#1A1A1A] p-1.5 rounded-full shadow cursor-pointer">
                     <Camera className="w-3 h-3" />
                     <input
                       type="file"
@@ -264,15 +279,15 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
                     />
                   </label>
                 </div>
-                <div className="text-xs text-stone-500">
-                  <p className="font-semibold text-stone-700">Client Profile Picture</p>
+                <div className="text-xs text-[#FBF4C4]/80">
+                  <p className="font-semibold text-white">Profile Picture</p>
                   <p>Click the camera icon to upload a replacement photo.</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-[#FBF4C4] uppercase tracking-wider mb-1">
                     First Name
                   </label>
                   <input
@@ -280,24 +295,24 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
                     required
                     value={editFormData.firstName}
                     onChange={(e) => setEditFormData({ ...editFormData, firstName: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm"
+                    className="w-full px-3 py-2 rounded-xl translucent-input text-xs sm:text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-[#FBF4C4] uppercase tracking-wider mb-1">
                     Preferred Name
                   </label>
                   <input
                     type="text"
                     value={editFormData.preferredName}
                     onChange={(e) => setEditFormData({ ...editFormData, preferredName: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm"
+                    className="w-full px-3 py-2 rounded-xl translucent-input text-xs sm:text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-[#FBF4C4] uppercase tracking-wider mb-1">
                     Last Name
                   </label>
                   <input
@@ -305,27 +320,29 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
                     required
                     value={editFormData.lastName}
                     onChange={(e) => setEditFormData({ ...editFormData, lastName: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm"
+                    className="w-full px-3 py-2 rounded-xl translucent-input text-xs sm:text-sm"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1">
-                    Phone Number
+                  <label className="block text-xs font-semibold text-[#FBF4C4] uppercase tracking-wider mb-1">
+                    Phone Number (000-000-0000)
                   </label>
                   <input
                     type="tel"
                     required
                     value={editFormData.phone}
-                    onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm"
+                    onChange={handlePhoneChange}
+                    maxLength={12}
+                    placeholder="000-000-0000"
+                    className="w-full px-3 py-2 rounded-xl translucent-input text-xs sm:text-sm font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-[#FBF4C4] uppercase tracking-wider mb-1">
                     Email Address
                   </label>
                   <input
@@ -333,13 +350,13 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
                     required
                     value={editFormData.email}
                     onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm"
+                    className="w-full px-3 py-2 rounded-xl translucent-input text-xs sm:text-sm"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-semibold text-[#FBF4C4] uppercase tracking-wider mb-1">
                   Home Address
                 </label>
                 <textarea
@@ -347,21 +364,21 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
                   rows={2}
                   value={editFormData.homeAddress}
                   onChange={(e) => setEditFormData({ ...editFormData, homeAddress: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm resize-none"
+                  className="w-full px-3 py-2 rounded-xl translucent-input text-xs sm:text-sm resize-none"
                 />
               </div>
 
-              <div className="pt-4 border-t border-stone-100 flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setEditingClient(null)}
-                  className="px-4 py-2.5 rounded-xl text-stone-600 hover:bg-stone-100 font-medium text-xs transition-colors"
+                  className="px-4 py-2.5 rounded-xl bg-[#716B56]/50 hover:bg-[#716B56] text-[#FBF4C4] font-medium text-xs transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-sage-700 hover:bg-sage-800 text-white rounded-xl font-semibold text-xs tracking-wide shadow-md flex items-center gap-1.5 transition-all"
+                  className="px-6 py-2.5 btn-primary-gold rounded-xl font-bold text-xs tracking-wide shadow-md flex items-center gap-1.5 transition-all"
                 >
                   <Save className="w-4 h-4" />
                   Save Client Profile
@@ -374,4 +391,3 @@ export const AdminClientProfilesPage: React.FC<AdminClientProfilesPageProps> = (
     </div>
   );
 };
-
