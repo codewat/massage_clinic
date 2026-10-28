@@ -1,0 +1,26 @@
+{
+  "short_name": "Serenity Spa",
+  "name": "Serenity Massage Clinic & Wellness",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#fbf9f6",
+  "theme_color": "#628762",
+  "display": "standalone",
+  "orientation": "portrait"
+}

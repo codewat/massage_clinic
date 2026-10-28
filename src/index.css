@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-spa-50: #fbf9f6;
+  --color-spa-100: #f5f0e9;
+  --color-spa-200: #ebdfd0;
+  --color-spa-300: #dfcaa8;
+  --color-spa-400: #ceaf80;
+  --color-spa-500: #b8925d;
+  --color-spa-600: #9e7545;
+  --color-spa-700: #7e5a37;
+  --color-spa-800: #644830;
+  --color-spa-900: #523c2a;
+
+  --color-sage-50: #f4f7f4;
+  --color-sage-100: #e5ece5;
+  --color-sage-200: #ceddce;
+  --color-sage-300: #abc4ab;
+  --color-sage-400: #83a583;
+  --color-sage-500: #628762;
+  --color-sage-600: #4c6c4c;
+  --color-sage-700: #3e563e;
+  --color-sage-800: #344634;
+  --color-sage-900: #2c3a2c;
+
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--color-spa-50);
+  color: #292524;
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom scrollbar for clean spa look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f0e9;
+}
+::-webkit-scrollbar-thumb {
+  background: #ceaf80;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b8925d;
+}
