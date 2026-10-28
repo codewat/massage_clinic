@@ -10,7 +10,12 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
+    host: true, // Listen on all local IPs (0.0.0.0, 127.0.0.1, and localhost) for Chrome & Edge compatibility
     port: 4000,
     open: true
+  },
+  preview: {
+    host: true,
+    port: 4000
   }
 });
