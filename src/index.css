@@ -28,6 +28,16 @@ body {
   min-height: 100vh;
 }
 
+/* Steady Background Focal Positioning for Mobile & Desktop */
+.bg-clinic-focus {
+  object-position: 72% center;
+}
+@media (min-width: 768px) {
+  .bg-clinic-focus {
+    object-position: center center;
+  }
+}
+
 /* Glassmorphic Dark Card */
 .glass-card {
   background-color: rgba(27, 39, 36, 0.88);
