@@ -11,6 +11,7 @@ import {
   formatDateKey
 } from '../services/clinicData';
 import { generateDailySlots, GeneratedTimeSlot } from '../services/bookingService';
+import { Appointment } from '../types';
 import { 
   Calendar as CalendarIcon, 
   Clock, 
@@ -21,7 +22,8 @@ import {
   ShieldCheck, 
   AlertCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  X
 } from 'lucide-react';
 
 interface BookAppointmentPageProps {
@@ -41,6 +43,7 @@ export const BookAppointmentPage: React.FC<BookAppointmentPageProps> = ({
   const [customNotes, setCustomNotes] = useState('');
   const [selectedDate, setSelectedDate] = useState<string>(getTodayDateString());
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<GeneratedTimeSlot | null>(null);
+  const [confirmedBookingData, setConfirmedBookingData] = useState<Appointment | null>(null);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [createdAptId, setCreatedAptId] = useState('');
 
@@ -86,13 +89,17 @@ export const BookAppointmentPage: React.FC<BookAppointmentPageProps> = ({
     });
 
     setCreatedAptId(newApt.id);
-    setIsSuccessModalOpen(true);
+    setConfirmedBookingData(newApt);
+    setSelectedTimeSlot(null);
+
+    // Smoothly scroll all the way up so user sees the confirmed message at the top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     try {
       confetti({
-        particleCount: 90,
-        spread: 60,
-        origin: { y: 0.6 }
+        particleCount: 110,
+        spread: 75,
+        origin: { y: 0.25 }
       });
     } catch {
       // safe fallback
@@ -173,6 +180,83 @@ export const BookAppointmentPage: React.FC<BookAppointmentPageProps> = ({
           </p>
         </div>
       </div>
+
+      {/* Confirmed Booking Banner at the Top */}
+      {confirmedBookingData && (
+        <div className="glass-card rounded-3xl p-6 sm:p-8 border-2 border-[#F1BB09] shadow-2xl space-y-4 animate-fade-in bg-[#1B2724]/95 ring-4 ring-[#F1BB09]/20">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-[#0D9488]/30 border border-[#0D9488] text-[#F1BB09] flex items-center justify-center font-bold shadow-lg shrink-0">
+                <CheckCircle2 className="w-7 h-7" />
+              </div>
+              <div>
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#0D9488] font-bold">
+                  Appointment Confirmed
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#F1BB09]">
+                  Booking Confirmed!
+                </h2>
+                <p className="text-xs sm:text-sm text-[#FBF4C4]/85">
+                  Your therapeutic massage session with {CLINIC_NAME} has been scheduled.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setConfirmedBookingData(null)}
+              className="p-1.5 text-stone-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+              title="Dismiss banner"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-[#161E1A] p-4 rounded-2xl border border-white/10 text-xs">
+            <div>
+              <span className="text-stone-400 block font-medium">Reference ID:</span>
+              <strong className="text-[#F1BB09] font-mono text-sm">{confirmedBookingData.id}</strong>
+            </div>
+            <div>
+              <span className="text-stone-400 block font-medium">Date &amp; Time:</span>
+              <strong className="text-white text-sm">
+                {confirmedBookingData.date} @ {formatDisplayTime(confirmedBookingData.startTime)}
+              </strong>
+            </div>
+            <div>
+              <span className="text-stone-400 block font-medium">Duration &amp; Fee:</span>
+              <strong className="text-white text-sm">
+                {confirmedBookingData.duration} Mins (${confirmedBookingData.price})
+              </strong>
+            </div>
+            <div>
+              <span className="text-stone-400 block font-medium">Target Focus:</span>
+              <strong className="text-white text-sm">
+                {confirmedBookingData.bodyPartFocus.join(', ')}
+              </strong>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+            <button
+              onClick={() => onNavigate('view-appointments')}
+              className="w-full sm:w-auto px-6 py-2.5 btn-primary-gold rounded-xl font-bold text-xs tracking-wide shadow-md transition-all active:scale-95"
+            >
+              View My Appointments
+            </button>
+            <button
+              onClick={() => onNavigate('client-dashboard')}
+              className="w-full sm:w-auto px-5 py-2.5 bg-[#716B56]/60 hover:bg-[#716B56] text-[#FBF4C4] rounded-xl font-medium text-xs transition-colors"
+            >
+              Return to Dashboard
+            </button>
+            <button
+              onClick={() => setConfirmedBookingData(null)}
+              className="text-xs text-stone-400 hover:text-white underline sm:ml-auto"
+            >
+              + Book Another Session
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="text-center max-w-2xl mx-auto">
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white">
@@ -523,72 +607,7 @@ export const BookAppointmentPage: React.FC<BookAppointmentPageProps> = ({
         </section>
       </div>
 
-      {/* Confirmation Modal */}
-      {isSuccessModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="glass-card rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl text-center space-y-5 border border-[#F1BB09]/40">
-            <div className="w-16 h-16 rounded-full bg-[#0D9488]/30 border border-[#0D9488] text-[#F1BB09] flex items-center justify-center mx-auto shadow-lg">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-
-            <div>
-              <h3 className="text-2xl font-serif font-bold text-white">
-                Booking Confirmed!
-              </h3>
-              <p className="text-xs sm:text-sm text-[#FBF4C4]/80 mt-1">
-                Your therapeutic massage session with {CLINIC_NAME} has been scheduled.
-              </p>
-            </div>
-
-            <div className="bg-[#161E1A] p-4 rounded-2xl border border-white/10 text-left text-xs space-y-2">
-              <div className="flex justify-between">
-                <span className="text-stone-400">Reference ID:</span>
-                <span className="font-mono font-bold text-[#F1BB09]">{createdAptId}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-stone-400">Date &amp; Time:</span>
-                <span className="font-semibold text-white">
-                  {selectedDate} @ {selectedTimeSlot?.displayTime}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-stone-400">Duration &amp; Price:</span>
-                <span className="font-semibold text-white">
-                  {selectedDuration} mins (${currentService.price})
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-stone-400">Target Focus:</span>
-                <span className="font-semibold text-white">
-                  {selectedBodyParts.join(', ')}
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-2.5 pt-2">
-              <button
-                onClick={() => {
-                  setIsSuccessModalOpen(false);
-                  onNavigate('view-appointments');
-                }}
-                className="w-full py-3 px-4 btn-primary-gold rounded-xl font-bold text-xs tracking-wide shadow-md transition-all"
-              >
-                View My Appointments
-              </button>
-
-              <button
-                onClick={() => {
-                  setIsSuccessModalOpen(false);
-                  onNavigate('client-dashboard');
-                }}
-                className="w-full py-2.5 px-4 bg-[#716B56]/50 hover:bg-[#716B56] text-[#FBF4C4] rounded-xl font-medium text-xs transition-colors"
-              >
-                Return to Dashboard
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Step 5: Summary & Submit */}
     </div>
   );
 };
