@@ -84,7 +84,7 @@ const MainApp: React.FC = () => {
         <img
           src="/bg.jpeg"
           alt="Clinic Background"
-          className="w-full h-full object-cover object-left md:object-center brightness-105 contrast-100"
+          className="w-full h-full object-cover object-center brightness-105 contrast-100"
         />
         {/* Clear translucent dark overlay (#59000000) for great readability while keeping image visible */}
         <div className="absolute inset-0 bg-[#161E1A]/45 backdrop-blur-[0.5px]" />
